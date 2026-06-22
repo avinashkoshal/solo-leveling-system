@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Solo Leveling Fitness System - RPG-based fitness transformation">
+    <title>THE SYSTEM</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="screen active">
+            <div class="system-boot">
+                <div class="glitch-text" data-text="THE SYSTEM">THE SYSTEM</div>
+                <div class="boot-text">
+                    <p class="typing" id="boot-msg"></p>
+                </div>
+                <div class="loading-bar">
+                    <div class="loading-fill" id="loading-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Screen -->
+        <div id="registration-screen" class="screen">
+            <div class="reg-container">
+                <h1 class="system-title">PLAYER REGISTRATION</h1>
+                <p class="system-subtitle">"You have been chosen."</p>
+
+                <form id="registration-form" class="reg-form">
+                    <div class="form-step active" data-step="1">
+                        <h2 class="step-title">Identity</h2>
+                        <div class="form-group">
+                            <label>Hunter Name</label>
+                            <input type="text" id="reg-name" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Age</label>
+                            <input type="number" id="reg-age" min="14" max="70" placeholder="Years" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <div class="radio-group">
+                                <label class="radio-card"><input type="radio" name="gender" value="M" required><span>Male</span></label>
+                                <label class="radio-card"><input type="radio" name="gender" value="F"><span>Female</span></label>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-next" onclick="nextStep(1)">NEXT →</button>
+                    </div>
+
+                    <div class="form-step" data-step="2">
+                        <h2 class="step-title">Physical Profile</h2>
+                        <div class="form-group">
+                            <label>Height (cm)</label>
+                            <input type="number" id="reg-height" min="140" max="220" step="0.1" placeholder="e.g. 170" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Current Weight (kg)</label>
+                            <input type="number" id="reg-weight" min="40" max="200" step="0.1" placeholder="e.g. 90" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Target Weight (kg)</label>
+                            <input type="number" id="reg-target" min="40" max="150" step="0.1" placeholder="System will suggest">
+                            <small class="hint" id="weight-hint"></small>
+                        </div>
+                        <div class="form-group">
+                            <label>Timeline (months)</label>
+                            <input type="number" id="reg-months" min="3" max="18" placeholder="6-12 recommended">
+                        </div>
+                        <button type="button" class="btn-back" onclick="prevStep(2)">← BACK</button>
+                        <button type="button" class="btn-next" onclick="nextStep(2)">NEXT →</button>
+                    </div>
+
+                    <div class="form-step" data-step="3">
+                        <h2 class="step-title">Activity Level</h2>
+                        <div class="form-group">
+                            <div class="activity-cards">
+                                <label class="activity-card">
+                                    <input type="radio" name="activity" value="1" required>
+                                    <div class="ac-content">
+                                        <span class="ac-icon">🪑</span>
+                                        <span class="ac-title">Sedentary</span>
+                                        <span class="ac-desc">No exercise, desk job</span>
+                                    </div>
+                                </label>
+                                <label class="activity-card">
+                                    <input type="radio" name="activity" value="2">
+                                    <div class="ac-content">
+                                        <span class="ac-icon">🚶</span>
+                                        <span class="ac-title">Light</span>
+                                        <span class="ac-desc">Walk sometimes</span>
+                                    </div>
+                                </label>
+                                <label class="activity-card">
+                                    <input type="radio" name="activity" value="3">
+                                    <div class="ac-content">
+                                        <span class="ac-icon">🏃</span>
+                                        <span class="ac-title">Moderate</span>
+                                        <span class="ac-desc">Exercise 1-2x/week</span>
+                                    </div>
+                                </label>
+                                <label class="activity-card">
+                                    <input type="radio" name="activity" value="4">
+                                    <div class="ac-content">
+                                        <span class="ac-icon">💪</span>
+                                        <span class="ac-title">Active</span>
+                                        <span class="ac-desc">Exercise 3-4x/week</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-back" onclick="prevStep(3)">← BACK</button>
+                        <button type="button" class="btn-next" onclick="nextStep(3)">NEXT →</button>
+                    </div>
+
+                    <div class="form-step" data-step="4">
+                        <h2 class="step-title">Equipment</h2>
+                        <div class="form-group">
+                            <div class="equip-cards">
+                                <label class="equip-card">
+                                    <input type="radio" name="equipment" value="1" required>
+                                    <span>Bodyweight only</span>
+                                </label>
+                                <label class="equip-card">
+                                    <input type="radio" name="equipment" value="2">
+                                    <span>+ Skipping Rope</span>
+                                </label>
+                                <label class="equip-card">
+                                    <input type="radio" name="equipment" value="3">
+                                    <span>+ Rope + Resistance Bands</span>
+                                </label>
+                                <label class="equip-card">
+                                    <input type="radio" name="equipment" value="4">
+                                    <span>+ Rope + Pull-up Bar</span>
+                                </label>
+                                <label class="equip-card">
+                                    <input type="radio" name="equipment" value="5">
+                                    <span>+ Rope + Bands + Bar</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-back" onclick="prevStep(4)">← BACK</button>
+                        <button type="button" class="btn-next" onclick="nextStep(4)">NEXT →</button>
+                    </div>
+
+                    <div class="form-step" data-step="5">
+                        <h2 class="step-title">Fitness Test</h2>
+                        <p class="step-desc">Be honest. The System knows.</p>
+                        <div class="form-group">
+                            <label>Max Push-ups (any form, one go)</label>
+                            <input type="number" id="reg-pushups" min="0" max="200" placeholder="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Max Squats (one go)</label>
+                            <input type="number" id="reg-squats" min="0" max="200" placeholder="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Max Plank (seconds)</label>
+                            <input type="number" id="reg-plank" min="0" max="600" placeholder="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Max Skip Rope (seconds, 0 if none)</label>
+                            <input type="number" id="reg-rope" min="0" max="1800" placeholder="0" required>
+                        </div>
+                        <button type="button" class="btn-back" onclick="prevStep(5)">← BACK</button>
+                        <button type="button" class="btn-submit" onclick="submitRegistration()">INITIALIZE SYSTEM</button>
+                    </div>
+                </form>
+
+                <div class="step-indicators">
+                    <span class="step-dot active" data-step="1"></span>
+                    <span class="step-dot" data-step="2"></span>
+                    <span class="step-dot" data-step="3"></span>
+                    <span class="step-dot" data-step="4"></span>
+                    <span class="step-dot" data-step="5"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div id="dashboard-screen" class="screen">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="player-info">
+                    <span class="rank-badge" id="dash-rank">E</span>
+                    <span class="player-name" id="dash-name">Player</span>
+                </div>
+                <div class="level-info">
+                    <span class="level-text">Lv.<span id="dash-level">1</span></span>
+                </div>
+            </div>
+
+            <!-- XP Bar -->
+            <div class="xp-bar-container">
+                <div class="xp-bar">
+                    <div class="xp-fill" id="dash-xp-fill" style="width: 0%"></div>
+                </div>
+                <span class="xp-text"><span id="dash-xp">0</span>/100 XP</span>
+            </div>
+
+            <!-- Energy Check-in (shown once per day) -->
+            <div class="energy-checkin" id="energy-checkin" style="display:none;">
+                <div class="energy-container">
+                    <h3 class="energy-title">How's your energy today?</h3>
+                    <p class="energy-subtitle">The System adapts to your state.</p>
+                    <div class="energy-options">
+                        <button class="energy-btn" data-level="1" onclick="setEnergy(1)">
+                            <span class="energy-emoji">😵</span>
+                            <span class="energy-label">Exhausted</span>
+                        </button>
+                        <button class="energy-btn" data-level="2" onclick="setEnergy(2)">
+                            <span class="energy-emoji">😔</span>
+                            <span class="energy-label">Low</span>
+                        </button>
+                        <button class="energy-btn" data-level="3" onclick="setEnergy(3)">
+                            <span class="energy-emoji">😐</span>
+                            <span class="energy-label">Normal</span>
+                        </button>
+                        <button class="energy-btn" data-level="4" onclick="setEnergy(4)">
+                            <span class="energy-emoji">😊</span>
+                            <span class="energy-label">Good</span>
+                        </button>
+                        <button class="energy-btn" data-level="5" onclick="setEnergy(5)">
+                            <span class="energy-emoji">🔥</span>
+                            <span class="energy-label">Fired Up</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Smart Insights Banner -->
+            <div class="insights-bar" id="insights-bar" style="display:none;">
+                <!-- Filled by JS -->
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="dashboard-content" id="dashboard-content">
+                <!-- Filled by JS based on active tab -->
+            </div>
+
+            <!-- Bottom Navigation -->
+            <nav class="bottom-nav">
+                <button class="nav-btn active" data-tab="quest" onclick="switchTab('quest')">
+                    <span class="nav-icon">⚔️</span>
+                    <span class="nav-label">Quest</span>
+                </button>
+                <button class="nav-btn" data-tab="stats" onclick="switchTab('stats')">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Stats</span>
+                </button>
+                <button class="nav-btn" data-tab="badges" onclick="switchTab('badges')">
+                    <span class="nav-icon">🏆</span>
+                    <span class="nav-label">Badges</span>
+                </button>
+                <button class="nav-btn" data-tab="dungeon" onclick="switchTab('dungeon')">
+                    <span class="nav-icon">🚪</span>
+                    <span class="nav-label">Dungeon</span>
+                </button>
+                <button class="nav-btn" data-tab="profile" onclick="switchTab('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-label">Profile</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (free, no install needed) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script src="js/engine.js"></script>
+    <script src="js/quests.js"></script>
+    <script src="js/smart.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

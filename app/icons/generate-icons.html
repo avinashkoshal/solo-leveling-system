@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head><title>Generate Icons</title></head>
+<body style="background:#0a0a1a; display:flex; flex-direction:column; align-items:center; gap:20px; padding:40px;">
+<h2 style="color:white;">Right-click each icon → Save As PNG</h2>
+<canvas id="icon192" width="192" height="192"></canvas>
+<canvas id="icon512" width="512" height="512"></canvas>
+<script>
+function drawIcon(canvas) {
+    const ctx = canvas.getContext('2d');
+    const s = canvas.width;
+
+    // Background
+    ctx.fillStyle = '#0a0a1a';
+    ctx.fillRect(0, 0, s, s);
+
+    // Glow circle
+    const gradient = ctx.createRadialGradient(s/2, s/2, 0, s/2, s/2, s*0.4);
+    gradient.addColorStop(0, 'rgba(124, 58, 237, 0.3)');
+    gradient.addColorStop(1, 'rgba(124, 58, 237, 0)');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, s, s);
+
+    // Border
+    ctx.strokeStyle = '#7c3aed';
+    ctx.lineWidth = s * 0.02;
+    ctx.strokeRect(s*0.05, s*0.05, s*0.9, s*0.9);
+
+    // "S" text
+    ctx.fillStyle = '#7c3aed';
+    ctx.font = `bold ${s * 0.5}px -apple-system, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = '#7c3aed';
+    ctx.shadowBlur = s * 0.05;
+    ctx.fillText('S', s/2, s*0.45);
+
+    // Subtext
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#06b6d4';
+    ctx.font = `bold ${s * 0.08}px -apple-system, sans-serif`;
+    ctx.fillText('SYSTEM', s/2, s*0.75);
+}
+
+drawIcon(document.getElementById('icon192'));
+drawIcon(document.getElementById('icon512'));
+</script>
+</body>
+</html>
