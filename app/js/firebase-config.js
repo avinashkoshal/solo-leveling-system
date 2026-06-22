@@ -4,12 +4,12 @@
  */
 
 const FirebaseConfig = {
-    apiKey: "AIzaSyDADfWrRDlALlwu4jyEtfq_expwWqopYmM",
-    authDomain: "solo-leveling-system-0.firebaseapp.com",
-    projectId: "solo-leveling-system-0",
-    storageBucket: "solo-leveling-system-0.firebasestorage.app",
-    messagingSenderId: "899401898384",
-    appId: "1:899401898384:web:a4b5b97ce7507b8b243b15",
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.firebasestorage.app",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID",
 };
 
 let db = null;

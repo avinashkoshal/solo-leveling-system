@@ -1,7 +1,7 @@
 # THE SYSTEM
 
 > "You have been chosen as a Player."
-> **Player:** Sung Avinash | **Current Level:** 1 | **Rank:** E-Rank
+> **Player:** Player Name | **Current Level:** 1 | **Rank:** E-Rank
 > **Objective:** Transform from 90kg to 75kg | **Timeline:** 6-9 months
 
 ---
@@ -556,7 +556,7 @@ Next week focus: ___
 
 > *"I alone level up."*
 >
-> — Player: Sung Avinash
+> — Player: Player Name
 > — System Initiated: 2026-06-22
 > — Target: Shadow Monarch (75kg)
 > — Status: ACTIVE
