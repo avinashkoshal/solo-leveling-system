@@ -39,11 +39,15 @@ A gamified fitness transformation app inspired by Solo Leveling. Enter your stat
 
 ## Screenshots
 
-Boot screen → Registration → Daily Quest → Stats → Badges → Dungeon
+![Boot Screen](screenshots/boot-screen.png)
+
+![Player Registration](screenshots/registration.png)
 
 ## Quick Start
 
 ### Option 1: Use it now
+
+**[https://arise.akeno.in](https://arise.akeno.in)**
 
 Open the live app, register your stats, and start your first quest.
 
