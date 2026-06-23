@@ -54,6 +54,9 @@ const CloudSync = {
                     syncEnabled = false;
                 }
                 this.updateAuthUI();
+                if (activeTab === 'profile' && typeof switchTab === 'function') {
+                    switchTab('profile');
+                }
             });
         } catch (e) {
             console.error('[System] Firebase init failed:', e);
@@ -177,7 +180,14 @@ const CloudSync = {
         const authSection = document.getElementById('auth-section');
         if (!authSection) return;
 
-        if (isGuest) {
+        const user = auth ? auth.currentUser : null;
+        if (user) {
+            currentUser = user;
+            isGuest = false;
+            syncEnabled = true;
+        }
+
+        if (!user) {
             authSection.innerHTML = `
                 <div class="profile-section">
                     <div class="profile-section-title">Cloud Sync</div>
@@ -194,8 +204,8 @@ const CloudSync = {
                 </div>
             `;
         } else {
-            const name = currentUser.displayName || currentUser.email;
-            const photo = currentUser.photoURL;
+            const name = user.displayName || user.email;
+            const photo = user.photoURL;
             authSection.innerHTML = `
                 <div class="profile-section">
                     <div class="profile-section-title">Cloud Sync</div>
