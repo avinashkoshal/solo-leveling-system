@@ -5,7 +5,7 @@
 
 const FirebaseConfig = {
     apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    authDomain: "YOUR_DOMAIN",
     projectId: "YOUR_PROJECT_ID",
     storageBucket: "YOUR_PROJECT.firebasestorage.app",
     messagingSenderId: "YOUR_SENDER_ID",
@@ -31,6 +31,16 @@ const CloudSync = {
             db = firebase.firestore();
 
             db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+
+            auth.getRedirectResult().then((result) => {
+                if (result && result.user) {
+                    UI.showNotification(
+                        `Signed in as ${result.user.displayName}`,
+                        'Data will sync across devices',
+                        'xp'
+                    );
+                }
+            }).catch(() => {});
 
             auth.onAuthStateChanged((user) => {
                 if (user) {
@@ -58,14 +68,23 @@ const CloudSync = {
 
         try {
             const provider = new firebase.auth.GoogleAuthProvider();
-            const result = await auth.signInWithPopup(provider);
-            UI.showNotification(
-                `Signed in as ${result.user.displayName}`,
-                'Data will sync across devices',
-                'xp'
-            );
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                await auth.signInWithRedirect(provider);
+            } else {
+                const result = await auth.signInWithPopup(provider);
+                UI.showNotification(
+                    `Signed in as ${result.user.displayName}`,
+                    'Data will sync across devices',
+                    'xp'
+                );
+            }
         } catch (e) {
-            if (e.code !== 'auth/popup-closed-by-user') {
+            if (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment') {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                await auth.signInWithRedirect(provider);
+            } else if (e.code !== 'auth/popup-closed-by-user') {
                 UI.showNotification('Sign-in failed', e.message, '');
             }
         }

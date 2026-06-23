@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Medium Article V2 - THE SYSTEM</title>
+<style>
+body { font-family: Georgia, serif; max-width: 720px; margin: 40px auto; padding: 0 20px; line-height: 1.8; color: #292929; }
+h1 { font-size: 2.2rem; margin-bottom: 0.3rem; }
+h2 { font-size: 1.5rem; margin-top: 2.5rem; }
+p { margin: 1.2rem 0; }
+em { color: #555; }
+code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-size: 0.9rem; }
+pre { background: #f4f4f4; padding: 16px; border-radius: 6px; overflow-x: auto; font-size: 0.85rem; line-height: 1.5; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+th { background: #f8f8f8; }
+a { color: #1a8917; }
+ul, li { margin: 0.5rem 0; }
+strong { color: #000; }
+hr { border: none; border-top: 1px solid #eee; margin: 2rem 0; }
+</style>
+</head>
+<body>
+
+<h1>I Built a Solo Leveling Fitness App That Punishes You for Skipping Workouts</h1>
+
+<p><em>How I turned an anime obsession into a gamified PWA that generates personalized RPG quests — and why it actually works better than any gym routine I've tried.</em></p>
+
+<hr>
+
+<h2>Look, Gyms Just Don't Work for Me</h2>
+
+<p>I'm 28, 90kg, 5'7". I've done the gym thing. Tried running at 6 AM (lasted four days). Tried those YouTube workout videos where some impossibly fit person says "you got this!" while you're dying on the floor. None of it sticks because it all depends on me <em>wanting</em> to do it, and most days I really don't.</p>
+
+<p>But here's the weird thing — I can sit and grind a video game for 14 hours and not even notice. I'll complete every single side quest in an RPG for a badge that does literally nothing. That's not willpower, that's just... good game design tricking my brain into doing things.</p>
+
+<p>If you've watched Solo Leveling, you know where this is going. Sung Jin-Woo gets this "System" that gives him daily quests, tracks his stats, levels him up, and straight up punishes him if he doesn't comply. He goes from being the weakest hunter alive to the Shadow Monarch. What if I could build that, but for fitness? Like, what if the reason I can't stick to workouts is that nobody's framed it as a quest with actual consequences?</p>
+
+<p>So I built it. It's a Progressive Web App — no gym required, no subscription, no app store nonsense. Just open <a href="https://arise.akeno.in">arise.akeno.in</a> on your phone and the System chooses you.</p>
+
+<p><em>[Boot Screen screenshot here]</em></p>
+
+<hr>
+
+<h2>What It Actually Does (It's Not Just a Checklist With XP)</h2>
+
+<p>I want to be clear — this isn't a todo list with a progress bar I slapped some anime paint on. It's a full RPG engine that adapts to your body, your equipment, and how fit (or unfit) you currently are.</p>
+
+<p>Here's the flow:</p>
+
+<pre>[Boot Screen] → [Player Registration] → [Fitness Test] → [Rank Assignment]
+      ↓                                                         ↓
+[Daily Quests] ← [Smart AI Layer] ← [Performance Analysis] ← [XP Engine]
+      ↓                                                         ↓
+[Dungeons/Bosses] → [Badges & Titles] → [Shadow Army] → [Rank Promotion]</pre>
+
+<p>When you first open it, you go through character creation — except it's actually a fitness profile. Name, age, height, weight, gender, activity level, what equipment you have (resistance bands? pull-up bar? literally nothing?), and then a fitness test where you do max push-ups, max squats, hold a plank, etc.</p>
+
+<p>From all that, the System calculates your BMR, TDEE, ideal weight, and assigns a starting rank from E (Weakest Hunter) to B (Elite Hunter). Everything after that point — every rep count, every exercise choice, every step target — is generated based on YOUR numbers. No two players get the same quest. My friend who can do 40 push-ups gets a completely different workout than me at my sad 15.</p>
+
+<p><em>[Registration screenshot here]</em></p>
+
+<hr>
+
+<h2>The Tech: No React, No Vue, No Excuses</h2>
+
+<p>I went deliberately minimal on the stack:</p>
+
+<pre>app/
+├── index.html          (single page, all screens)
+├── css/style.css       (dark theme, purple/blue glow)
+├── js/
+│   ├── engine.js       (XP, levels, ranks, stat math)
+│   ├── quests.js       (dynamic quest/dungeon/boss generation)
+│   ├── smart.js        (adaptive difficulty, plateau detection)
+│   ├── firebase-config.js (cloud sync, Google auth)
+│   ├── ui.js           (screen rendering, animations)
+│   └── app.js          (state management, event wiring)
+├── sw.js               (service worker for offline)
+└── manifest.json       (PWA install config)</pre>
+
+<p>No React. No build step. No node_modules folder that weighs more than the app itself. Six JS files, one CSS file, done. The whole thing is under 100KB and loads in under a second on 3G. I know the framework discourse is tired at this point, but honestly for something like this — a single-user app that needs to load instantly on a phone with garbage gym Wi-Fi — you don't need any of it.</p>
+
+<p>Why a PWA instead of native? Honestly, because I'm cheap and lazy (in the good way). Firebase hosting is free. No App Store review process. No $99/year Apple developer tax. User taps "Add to Home Screen" and it looks and feels native — full screen, offline-capable, the works.</p>
+
+<p>Firebase gives me Google auth with one tap, Firestore with offline persistence baked in, and hosting with my custom domain. But the app is guest-first — you don't even need to sign in. Everything lives in localStorage until you optionally connect Google for cross-device sync. Zero friction to start.</p>
+
+<hr>
+
+<h2>The RPG Engine</h2>
+
+<p>The rank system mirrors Solo Leveling's progression tied to actual weight loss goals:</p>
+
+<table>
+<tr><th>Rank</th><th>Title</th><th>Weight Target</th></tr>
+<tr><td>E</td><td>Weakest Hunter</td><td>Starting weight</td></tr>
+<tr><td>D</td><td>The Awakened</td><td>-5 kg</td></tr>
+<tr><td>C</td><td>Proven Hunter</td><td>-10 kg</td></tr>
+<tr><td>B</td><td>Elite Hunter</td><td>-15 kg</td></tr>
+<tr><td>A</td><td>National Level</td><td>-20 kg</td></tr>
+<tr><td>S</td><td>Shadow Monarch</td><td>Ideal weight</td></tr>
+</table>
+
+<p>XP flows from everything:</p>
+
+<pre>XP_REWARDS: {
+  dailyQuestFull: 15,
+  dailyQuestPartial: 8,
+  weeklyDungeon: 50,
+  bossRaidExcellent: 200,
+  streak7: 30,
+  streak30: 200,
+  kgLost: 50,
+  newExercise: 25,
+},
+XP_PENALTIES: {
+  missedDay: -10,
+  missed2Days: -25,
+  missed3Days: -50,
+  skippedDungeon: -30,
+}</pre>
+
+<p>Every 100 XP = one level up. Levels within a rank unlock new exercises through a Skill Tree, so you're not attempting archer push-ups when you should still be doing wall push-ups. This is actually important — it's not just a game mechanic, it's progressive overload that prevents injury.</p>
+
+<p>The penalty system is what makes the whole thing sticky though. Miss a day? -10 XP. Miss three days? That's -50 and a potential level drop. In Solo Leveling, the System doesn't ask how your day was. It doesn't care. Neither does this one. That sounds harsh written out, but in practice it's the thing that gets me off the couch on days I otherwise wouldn't bother.</p>
+
+<hr>
+
+<h2>Quest Generation: It's Different Every Day</h2>
+
+<p>The quest generator takes your fitness test results and scales them to your rank:</p>
+
+<pre>generateDailyQuest(player, rank, gameState) {
+  const rankIndex = SystemEngine.getRankIndex(rank);
+  const mult = 1 + (rankIndex * 0.5);
+  const pushupBase = Math.max(5, Math.floor(player.maxPushups / 2));
+  const squatBase = Math.max(10, Math.floor(player.maxSquats / 2));
+  // ...builds exercise list based on rank and equipment
+}</pre>
+
+<p>At Rank E, you're doing wall push-ups and bodyweight squats. By Rank A, the System prescribes archer push-ups, burpees, pull-ups (if you said you have a bar), resistance band work. The exercise types themselves evolve — the "push-up" slot cycles through six progressions from wall to decline.</p>
+
+<p><strong>Weekly Dungeons</strong> drop on Saturdays. Timed challenges named after Solo Leveling locations — Goblin Cave at Rank E, Red Gate at Rank C, Double Dungeon at Rank A. 50 XP each.</p>
+
+<p><strong>Monthly Boss Raids</strong> are fitness re-tests named after the Monarchs. The King of the Swamp tests your max push-ups. Cerberus measures your plank hold. Antares is the final form — full-body assessment that determines rank promotion eligibility. I'll be honest, I haven't reached Antares yet. I'm still stuck at C-Rank fighting Cerberus.</p>
+
+<hr>
+
+<h2>The Smart Layer (This Is the Part I'm Most Proud Of)</h2>
+
+<p>The <code>smart.js</code> module is where this thing goes from "anime-themed tracker" to something that actually adapts. And it all runs client-side — no API calls, no server costs.</p>
+
+<p><strong>Auto-difficulty scaling:</strong> Complete 100% of quests for 7 straight days? The System bumps your reps by 10%. Keep crushing it? Multiplier goes up to 1.5x. Struggling below 50% completion? It drops to 0.6x. I never have to manually adjust anything.</p>
+
+<p><strong>Energy check-in:</strong> Every morning it asks "How do you feel today?" from 1-5. This was actually the hardest design decision. At first I had no mercy — quest is quest, do it or get penalized. But I kept getting demotivated on genuinely bad days and abandoning the app entirely. So now:</p>
+
+<ul>
+<li>Energy 5: Full quest, full intensity</li>
+<li>Energy 3-4: Standard quest</li>
+<li>Energy 2: 60% intensity, no penalty for partial completion</li>
+<li>Energy 1: Minimum viable quest:</li>
+</ul>
+
+<pre>const minQuest = {
+  exercises: [
+    { text: '10 Squats (any form)', id: 'squats' },
+    { text: '10 Push-ups (any form)', id: 'pushups' },
+    { text: '30s Plank', id: 'plank' },
+    { text: 'Walk: 2,000 steps', id: 'steps' },
+  ],
+  timeEstimate: 10,
+};
+return { mode: 'minimum', quest: minQuest,
+  message: 'Rest protocol. Minimum quest — just show up.' };</pre>
+
+<p>This sounds small but it's probably the most important feature. Most fitness apps treat "did nothing" and "did the bare minimum" the same way. But showing up on your worst day is what builds the habit. The minimum quest takes 10 minutes and you still get 8 XP. You don't break your streak. You stay in the game.</p>
+
+<p><strong>Plateau detection:</strong> If your weight stalls for 2+ weeks (less than 0.5 kg change), it triggers suggestions — bump up steps, add cardio, audit portion sizes, or take a strategic diet break.</p>
+
+<p><strong>Miss pattern tracking:</strong> It figures out which day you fail most often and suggests making that your rest day. For me it was Wednesdays for some reason. Now Wednesday is my scheduled rest day and my streak has been way more consistent.</p>
+
+<hr>
+
+<h2>Shadow Army (My Favorite Feature)</h2>
+
+<p>In Solo Leveling, Jin-Woo summons defeated enemies as shadow soldiers. In this app, each habit you build becomes a summoned shadow:</p>
+
+<ul>
+<li><strong>Igris</strong> — Morning hydration (500ml on waking)</li>
+<li><strong>Beru</strong> — 10-min walk after every meal</li>
+<li><strong>Bellion</strong> — Sleep by 11 PM</li>
+</ul>
+
+<p>Once a shadow is summoned (habit solidified for 21+ days), it's permanent. It's a visual way to see your habits stacking up. Sounds cheesy written out but there's something genuinely satisfying about watching your army grow. It makes consistency feel like you're accumulating power rather than just... not eating chips.</p>
+
+<p>17+ badges provide micro-dopamine throughout: "First Blood" (first quest done), "Iron Will" (14-day streak), "Shadow Monarch" (S-Rank). They pop up styled like the anime's system windows with the purple glow effect.</p>
+
+<hr>
+
+<h2>PWA Setup (The Boring But Necessary Part)</h2>
+
+<p>Service worker caches everything on first visit:</p>
+
+<pre>const CACHE_NAME = 'solo-leveling-v3';
+const ASSETS = [
+  './', './index.html', './css/style.css',
+  './js/engine.js', './js/quests.js', './js/smart.js',
+  './js/firebase-config.js', './js/ui.js', './js/app.js',
+  './manifest.json',
+];
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+  );
+  self.skipWaiting();
+});</pre>
+
+<p>Cache-first with network fallback. Works completely offline (useful during outdoor runs when you lose signal). Manifest sets standalone display mode, portrait orientation, dark theme color. Android auto-prompts install. iOS users do the Share > Add to Home Screen dance — not ideal but it works.</p>
+
+<hr>
+
+<h2>The Aesthetic</h2>
+
+<p>The CSS uses custom properties for the Solo Leveling vibe — deep navy, purple glow, blue accents:</p>
+
+<pre>:root {
+  --bg-primary: #0a0a1a;
+  --accent-purple: #7c3aed;
+  --accent-blue: #3b82f6;
+  --glow-purple: 0 0 20px rgba(124, 58, 237, 0.3);
+}</pre>
+
+<p>The boot screen has a glitch-text animation on "THE SYSTEM" with a typing effect for boot messages — mimicking how the System appears to Jin-Woo in the manhwa. Registration feels like character creation with card-style radio buttons and step progression. I spent way too long on the animations but they make a real difference in making it feel like a game rather than an app.</p>
+
+<hr>
+
+<h2>What I Actually Learned</h2>
+
+<p><strong>Loss aversion is more powerful than rewards.</strong> I designed the penalty system almost as an afterthought but it turned out to be the entire reason the app works for me. I'll skip a workout to gain 15 XP. I will NOT skip a workout to avoid losing 50 XP. Brains are weird.</p>
+
+<p><strong>Starting from the user's actual fitness level matters more than I expected.</strong> My first version had fixed quest templates. It lasted two days before I gave up because the push-up count was too high. Basing everything on the fitness test means the difficulty always sits in that sweet spot where it's hard but not demoralizing.</p>
+
+<p><strong>PWAs are seriously underrated for personal projects.</strong> Free hosting, offline, installable, no gatekeepers. I keep hearing "just use React Native" or "just use Flutter" and for what? A single-user fitness app? Come on.</p>
+
+<p><strong>No-framework JS is fine for apps this size.</strong> Will it scale to a team of 10 developers? No. Does it need to? Also no. It works today and it'll work in 5 years without me touching a single dependency. I'm not shipping this to a Fortune 500. I'm using it to do push-ups.</p>
+
+<hr>
+
+<h2>Try It</h2>
+
+<p>THE SYSTEM is live and open source:</p>
+
+<ul>
+<li><strong>Use it:</strong> <a href="https://arise.akeno.in">arise.akeno.in</a> — open on your phone, add to home screen, begin</li>
+<li><strong>Star/Fork:</strong> <a href="https://github.com/avinashkoshal/solo-leveling-system">github.com/avinashkoshal/solo-leveling-system</a> — customize rank names, add exercises, whatever you want</li>
+<li><strong>Contribute:</strong> PRs welcome for new dungeon types, boss raids, exercise progressions</li>
+</ul>
+
+<p>I've been using it for about a week now. The streak is at 7 days which is longer than most gym attempts I've made. Is it because the app is genius? Probably not. But my monkey brain sees the XP bar and the streak counter and thinks "I can't break this" in a way that "I should be healthier" never achieved.</p>
+
+<p>The System doesn't care about your excuses. Neither does mine, apparently.</p>
+
+<p><em>Arise.</em></p>
+
+<hr>
+
+<p><em>Built with ❤️ using <a href="https://claude.ai">Claude</a>.</em></p>
+
+</body>
+</html>
